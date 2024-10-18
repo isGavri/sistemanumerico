@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
+import javax.swing.plaf.OptionPaneUI;
 
 public class Conversiones {
 
@@ -34,7 +35,7 @@ public class Conversiones {
                        + "(3)hexadecimal "
                        + "(4)octal ");
 
-    String sistemaOrigen = scanner.nextLine();
+    String from = scanner.nextLine();
 
     System.out.println("Ingrese el número: ");
     String numero = scanner.nextLine();
@@ -44,57 +45,56 @@ public class Conversiones {
                        + "(2)decimal"
                        + "(3)hexadecimal "
                        + "(4)octal ");
-    String sistemaDestino = scanner.nextLine();
+    String to = scanner.nextLine();
 
-    String resultado = convertir(sistemaOrigen, numero, sistemaDestino);
+    String resultado = convertir(from, numero, to);
 
-    System.out.println("El resultado de la conversión es: " + resultado);
+    System.out.println("Conversion:" + resultado);
   }
 
-  public static String convertir(String sistemaOrigen, String numero,
-                                 String sistemaDestino) {
-    int numeroDecimal = 0;
+  public static String convertir(String from, String numero, String to) {
+    int dec = 0;
 
     // Convertir el número de origen a decimal
-    switch (sistemaOrigen) {
+    switch (from) {
     case "1":
-      numeroDecimal = binarioADecimal(numero);
+      dec = bintodec(numero);
       break;
     case "2":
-      numeroDecimal = Integer.parseInt(numero);
+      dec = Integer.parseInt(numero);
       break;
     case "3":
-      numeroDecimal = hexadecimalADecimal(numero);
+      dec = hextodec(numero);
       break;
     case "4":
-      numeroDecimal = octalADecimal(numero);
+      dec = octtodec(numero);
       break;
     default:
       return "Sistema de origen no válido.";
     }
 
     // Convertir el número decimal al sistema de destino
-    switch (sistemaDestino) {
+    switch (to) {
     case "1":
-      return decimalABinario(numeroDecimal);
+      return dectobin(dec);
     case "2":
-      return Integer.toString(numeroDecimal);
+      return Integer.toString(dec);
     case "3":
-      return decimalAHexadecimal(numeroDecimal);
+      return dextohex(dec);
     case "4":
-      return decimalAOctal(numeroDecimal);
+      return dectooct(dec);
     default:
       return "Sistema de destino no válido.";
     }
   }
 
   // Conversión de Binario a Decimal
-  public static int binarioADecimal(String numeroBinario) {
+  public static int bintodec(String bin) {
     int decimal = 0;
     int potencia = 0;
 
-    for (int i = numeroBinario.length() - 1; i >= 0; i--) {
-      if (numeroBinario.charAt(i) == '1') {
+    for (int i = bin.length() - 1; i >= 0; i--) {
+      if (bin.charAt(i) == '1') {
         decimal += Math.pow(2, potencia);
       }
       potencia++;
@@ -103,12 +103,12 @@ public class Conversiones {
   }
 
   // Conversión de Octal a Decimal
-  public static int octalADecimal(String numeroOctal) {
+  public static int octtodec(String oct) {
     int decimal = 0;
     int potencia = 0;
 
-    for (int i = numeroOctal.length() - 1; i >= 0; i--) {
-      int digito = numeroOctal.charAt(i) - '0';
+    for (int i = oct.length() - 1; i >= 0; i--) {
+      int digito = oct.charAt(i) - '0';
       decimal += digito * Math.pow(8, potencia);
       potencia++;
     }
@@ -116,12 +116,12 @@ public class Conversiones {
   }
 
   // Conversión de Hexadecimal a Decimal
-  public static int hexadecimalADecimal(String numeroHex) {
+  public static int hextodec(String hex) {
     int decimal = 0;
     int potencia = 0;
 
-    for (int i = numeroHex.length() - 1; i >= 0; i--) {
-      char digito = numeroHex.charAt(i);
+    for (int i = hex.length() - 1; i >= 0; i--) {
+      char digito = hex.charAt(i);
       int valor;
 
       if (digito >= '0' && digito <= '9') {
@@ -137,40 +137,40 @@ public class Conversiones {
   }
 
   // Conversión de Decimal a Binario
-  public static String decimalABinario(int numeroDecimal) {
-    StringBuilder binario = new StringBuilder();
+  public static String dectobin(int dec) {
+    StringBuilder bin = new StringBuilder();
 
-    while (numeroDecimal > 0) {
-      binario.insert(0, numeroDecimal % 2);
-      numeroDecimal /= 2;
+    while (dec > 0) {
+      bin.insert(0, dec % 2);
+      dec /= 2;
     }
 
-    return binario.length() > 0 ? binario.toString() : "0";
+    return bin.length() > 0 ? bin.toString() : "0";
   }
 
   // Conversión de Decimal a Octal
-  public static String decimalAOctal(int numeroDecimal) {
-    StringBuilder octal = new StringBuilder();
+  public static String dectooct(int dec) {
+    StringBuilder oct = new StringBuilder();
 
-    while (numeroDecimal > 0) {
-      octal.insert(0, numeroDecimal % 8);
-      numeroDecimal /= 8;
+    while (dec > 0) {
+      oct.insert(0, dec % 8);
+      dec /= 8;
     }
 
-    return octal.length() > 0 ? octal.toString() : "0";
+    return oct.length() > 0 ? oct.toString() : "0";
   }
 
   // Conversión de Decimal a Hexadecimal
-  public static String decimalAHexadecimal(int numeroDecimal) {
-    StringBuilder hexadecimal = new StringBuilder();
+  public static String dextohex(int dec) {
+    StringBuilder hex = new StringBuilder();
     char[] hexDigits = "0123456789ABCDEF".toCharArray();
 
-    while (numeroDecimal > 0) {
-      int residuo = numeroDecimal % 16;
-      hexadecimal.insert(0, hexDigits[residuo]);
-      numeroDecimal /= 16;
+    while (dec > 0) {
+      int residuo = dec % 16;
+      hex.insert(0, hexDigits[residuo]);
+      dec /= 16;
     }
 
-    return hexadecimal.length() > 0 ? hexadecimal.toString() : "0";
+    return hex.length() > 0 ? hex.toString() : "0";
   }
 }
